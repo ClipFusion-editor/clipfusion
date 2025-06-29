@@ -1,37 +1,9 @@
-<style>
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .column {
-        flex-direction: column;
-    }
-
-    .clip-fusion-logo-compound {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .clip-fusion-logo {
-        margin: 10px;
-    }
-
-    .italic {
-        font-style: italic;
-    }
-</style>
-
-<div class="center column">
-    <div class="clip-fusion-logo-compound">
-        <img src="public/clipfusion-logo.svg" alt="ClipFusion logo" width="50" height="50" class="clip-fusion-logo"/> 
-        <h1>ClipFusion</h1>
-    </div>
-    <p class="italic">Alternative to Adobe Premiere Pro right in your browser.</p>
-    <p class="italic">Fully open-source and free.</p>
-</div>
+<h1 align="center">
+    <img src="public/clipfusion-logo.svg" alt="ClipFusion logo" width="50" height="50" class="clip-fusion-logo"/> 
+    ClipFusion
+</h1>
+<p align="center"><it>Alternative to Adobe Premiere Pro right in your browser.</it></p>
+<p align="center"><it>Fully open-source and free.</it></p>
 
 ---
 
