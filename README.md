@@ -5,8 +5,6 @@
 <p align="center"><it>Alternative to Adobe Premiere Pro right in your browser.</it></p>
 <p align="center"><it>Fully open-source and free.</it></p>
 
----
-
 > [!CAUTION]
 > ClipFusion is in active development and may be unstable!
 
