@@ -19,7 +19,7 @@ export default function Page() {
         <div className="text-center">
           <div className="flex flex-row justify-center items-center">
             <ClipFusionLogo href="/home" width="50" height="50">
-              <p className="font-bold text-6xl my-2">ClipFusion</p>
+              <p className="font-bold text-5xl md:text-6xl lg:text-7xl my-2">ClipFusion</p>
             </ClipFusionLogo>
           </div>
           <p className="font-light">Powerful alternative to Adobe Premiere Pro.</p>
@@ -33,16 +33,16 @@ export default function Page() {
         </div>
       </main>
       <div className="absolute bottom-0 left-0 py-5 dark">
-        <div className="flex flex-row justify-between items-center w-screen px-5">
-          <a href="https://github.com/ClipFusion-editor/clipfusion" target="_blank">
+        <div className="flex flex-row justify-between items-center w-screen px-5 md:px-3 sm:px-2">
+          <a href="https://github.com/ClipFusion-editor/clipfusion" target="_blank" className="shrink-0">
             <BubblyContainer forceDark>
-              <Image className="dark:invert hover:brightness-150 active:brightness-200 rounded-full grid aspect-square" src={GithubLogo} alt="GitHub logo" width="40" height="39"/>  
+              <Image className="dark:invert hover:brightness-150 active:brightness-200" src={GithubLogo} alt="GitHub logo" width="40" height="40"/>  
             </BubblyContainer>  
           </a>
-          <div className="text-center font-extralight text-neutral-800 dark:invert">
+          <div className="text-center font-extralight text-neutral-800 lg:text-2xl dark:invert">
             <FontAwesomeIcon icon={faTriangleExclamation}/> ClipFusion is in active development and may be unstable!
           </div>
-          <ThemeSwitcher width="40" height="39" forceDark/>
+          <ThemeSwitcher width="40" height="40" forceDark/>
         </div>
       </div>
     </div>

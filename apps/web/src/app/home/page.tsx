@@ -1,15 +1,12 @@
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/navigation';
 
-import RoundedButton from '@/components/rounded-button/rounded-button';
 import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
 import BackButton from '@/components/back-button/back-button';
 import SolidSeparator from '@/components/solid-separator/solid-separator';
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { faHome, faPerson } from '@fortawesome/free-solid-svg-icons';
-import { Metadata } from 'next';
 import ThemeSwitcher from '@/components/theme-switcher/theme-switcher';
 
 function ProjectsPage(): ReactNode {
@@ -78,7 +75,7 @@ export default function Page() {
             <nav className="bg-neutral-200 dark:bg-neutral-600 fixed top-0 left-0 right-0 px-1 h-16 flex flex-row items-center max-w-full">
                 <BackButton/>
                 <ClipFusionLogo width="25" height="25">
-                    <p className="text-2xl font-bold mx-1">Home</p>
+                    <p className="text-2xl font-bold">Home</p>
                 </ClipFusionLogo>
                 <ThemeSwitcher/>
             </nav>

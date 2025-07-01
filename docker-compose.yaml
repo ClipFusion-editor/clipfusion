@@ -1,0 +1,28 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  web-development:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: development
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - USE_WEBPACK=$USE_WEBPACK
+    volumes:
+      - "./apps/web/src:/apps/web/src:ro"
+      - "./apps/web/public:/apps/web/public:ro"
+
+networks:  
+  default:  
+    name: clipfusion-network
