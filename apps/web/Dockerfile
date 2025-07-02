@@ -8,9 +8,9 @@ FROM base AS development
 
 WORKDIR /apps/web/
 
-COPY apps/web/package.json .
+COPY apps/web/package*.json .
 
-RUN npm install
+RUN npm ci
 
 COPY apps/web/eslint.config.mjs eslint.config.mjs
 COPY apps/web/next-env.d.ts next-env.d.ts
@@ -33,9 +33,9 @@ FROM base AS deps
 
 WORKDIR /apps/web/
 
-COPY apps/web/package.json .
+COPY apps/web/package*.json .
 
-RUN npm install
+RUN npm ci
 
 FROM base AS builder
 

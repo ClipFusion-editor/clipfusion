@@ -32,6 +32,17 @@ If you for whatever reason need to start ClipFusion in development mode, use:
 ```
 docker-compose up web-development -d
 ```
+
+> [!TIP]
+> If you're using Docker + WSL2 on Windows you may encounter broken [Fast Refresh](https://nextjs.org/docs/architecture/fast-refresh) in development builds
+> This is due to bug in WSL2 that prevents file watcher to normally work
+> Currently there are two possible ways to combat this:
+> 1. Use Hyper-V based engine instead of WSL2 based engine
+> <img src="assets/docker-wsl2.png"/>
+> (uncheck `Use the WSL 2 based engine`)
+> 2. If you really want to use WSL2 based engine, you can try this:
+> Before starting ClipFusion in development mode, set environment variable `USE_WEBPACK` to `true`
+
 ClipFusion will appear at [http://localhost:3001](http://localhost:3001)
 
 Installing any additional software besides Docker is not required.
