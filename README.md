@@ -41,10 +41,9 @@ ClipFusion will appear at [http://localhost:3001](http://localhost:3001)
 > If you're using Docker + WSL2 on Windows you may encounter broken [Fast Refresh](https://nextjs.org/docs/architecture/fast-refresh) in development builds
 > This is due to a bug in WSL2 that prevents file watcher from working as usual
 > Currently there are two possible ways to combat this:
-> 1. Use Hyper-V based engine instead of WSL2 based engine
+> 1. Use Hyper-V based engine instead of WSL2 based engine (uncheck `Use the WSL 2 based engine`)
 >
-> <img src="assets/docker-wsl2.png"/>
-> (uncheck `Use the WSL 2 based engine`)
+> ![Docker Settings](assets/docker-wsl2.png)
 > 
 > 2. If you really need to use WSL2 based engine, you need to set environment variable `USE_WEBPACK` to `true` before starting ClipFusion in development mode
 > This option will force ClipFusion to use `webpack` instead of `turbopack` (Fast Refresh performance may suffer)
