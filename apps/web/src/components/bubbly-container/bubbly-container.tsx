@@ -5,6 +5,7 @@ interface BubblyContainerProps {
     forceDark?: boolean;
     className?: string;
     square?: boolean;
+    noInteraction?: boolean;
 };
 
 const defaultProps: BubblyContainerProps = {
@@ -17,9 +18,10 @@ export default function BubblyContainer(passedProps: BubblyContainerProps): Reac
     const normalStyle = "bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-500 dark:hover:bg-neutral-400";
     const forceDarkStyle = "bg-neutral-800 hover:bg-neutral-900";
     const squareStyle = "grid items-center aspect-square w-auto";
+    const interactionStyle = "duration-75 hover:scale-105 active:scale-125";
 
     return (
-        <div className={ `mx-5 rounded-full ${ props.forceDark ? forceDarkStyle : normalStyle } duration-75 hover:scale-105 active:scale-125 p-2 ${ props.square ? squareStyle : "" }` }>
+        <div className={ `mx-5 rounded-full ${ props.forceDark ? forceDarkStyle : normalStyle } ${ props.noInteraction ? "" : interactionStyle } p-2 ${ props.square ? squareStyle : "" }` }>
             {props.children}
         </div>
     );

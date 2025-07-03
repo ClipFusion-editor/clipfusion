@@ -14,7 +14,7 @@ import BubblyContainer from '@/components/bubbly-container/bubbly-container';
 export default function Page() {
   return (
     <div className="overflow-hidden text-neutral-50">
-      <Image src={CameraCloseup} className="absolute bottom-0 left-0 saturate-0 brightness-25 -z-50 size-full object-cover" alt="Camera closeup picture"/>
+      <Image src={CameraCloseup} className="absolute bottom-0 left-0 saturate-0 brightness-50 dark:brightness-25 duration-75 -z-50 size-full object-cover" alt="Camera closeup picture"/>
       <main className="flex flex-col justify-center items-center text-center h-screen animate-slide-in">
         <div className="text-center">
           <div className="flex flex-row justify-center items-center">
@@ -39,7 +39,7 @@ export default function Page() {
               <Image className="dark:invert hover:brightness-150 active:brightness-200" src={GithubLogo} alt="GitHub logo" width="40" height="40"/>  
             </BubblyContainer>  
           </a>
-          <div className="text-center font-extralight text-neutral-800 lg:text-2xl dark:invert">
+          <div className="text-center font-extralight text-neutral-300 lg:text-xl">
             <FontAwesomeIcon icon={faTriangleExclamation}/> ClipFusion is in active development and may be unstable!
           </div>
           <ThemeSwitcher width="40" height="40" forceDark/>
