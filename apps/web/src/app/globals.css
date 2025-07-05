@@ -27,7 +27,7 @@ body {
 }
 
 @theme {
-  --animate-slide-in: slide-in 0.5s ease-in-out;
+  --animate-slide-in: slide-in 0.35s ease-in-out;
 
   @keyframes slide-in {
     0% {

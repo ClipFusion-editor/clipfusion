@@ -13,8 +13,8 @@ import BubblyContainer from '@/components/bubbly-container/bubbly-container';
 
 export default function Page() {
   return (
-    <div className="overflow-hidden text-neutral-50">
-      <Image src={CameraCloseup} className="absolute bottom-0 left-0 saturate-0 brightness-50 dark:brightness-25 duration-75 -z-50 size-full object-cover" alt="Camera closeup picture"/>
+    <div className="overflow-hidden text-neutral-50 overscroll-none">
+      <Image src={CameraCloseup} className="overscroll-none absolute bottom-0 left-0 saturate-0 brightness-50 dark:brightness-25 duration-75 -z-50 size-full object-cover" alt="Camera closeup picture"/>
       <main className="flex flex-col justify-center items-center text-center h-screen animate-slide-in">
         <div className="text-center">
           <div className="flex flex-row justify-center items-center">

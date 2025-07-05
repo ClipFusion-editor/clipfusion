@@ -2,8 +2,11 @@
     <img src="assets/clipfusion-logo.svg" alt="ClipFusion logo" width="50" height="50"/> 
     ClipFusion
 </h1>
-<p align="center"><it>Alternative to Adobe Premiere Pro right in your browser.</it></p>
-<p align="center"><it>Fully open-source and free.</it></p>
+<p align="center"><it>
+Alternative to Adobe Premiere Pro right in your browser.
+<br/>
+Fully open-source and free.
+</it></p>
 
 > [!CAUTION]
 > ClipFusion is in active development and may be unstable!

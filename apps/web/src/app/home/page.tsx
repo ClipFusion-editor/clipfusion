@@ -2,15 +2,19 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
+import ClipFusionLogoSVG from '@/../public/clipfusion-logo.svg';
 import BackButton from '@/components/back-button/back-button';
 import SolidSeparator from '@/components/solid-separator/solid-separator';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
-import { faFolder, faHome, faPerson, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPerson, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwitcher from '@/components/theme-switcher/theme-switcher';
 import BubblyContainer from '@/components/bubbly-container/bubbly-container';
-import { getLocalProjectsUUIDS, getProjectByUUID, updateLocalProject, updateLocalProjectsUUIDS } from '@/lib/projects';
-import { Project } from '@/lib/project';
+import { getLocalProjectsUUIDS, getProjectByUUID, updateLocalProject, updateLocalProjectsUUIDS } from '@/lib/projects/projects';
+import Project from '@/lib/projects/Project';
+import { addThumbnail, thumbnailsDB } from '@/lib/thumbnails/thumbnails';
+import { useLiveQuery } from 'dexie-react-hooks';
+import Image from 'next/image';
+import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
 
 interface UUIDSContextProps {
     uuids: Array<string>;
@@ -45,17 +49,26 @@ function useUuidsContext(): UUIDSContextProps {
 }
 
 const projectButtonStyle = 
-    "cursor-pointer rounded-xl bg-neutral-100 dark:bg-neutral-900 h-75 hover:scale-95 active:scale-90 duration-75";
+    "cursor-pointer rounded-xl dark:bg-neutral-900 bg-neutral-200 w-full aspect-video active:scale-95 hover:scale-[98%] duration-75 overflow-hidden";
 
 function NewProjectButton(): ReactNode {
     const { uuids, setUuids } = useUuidsContext();
 
-    const createNewProject = () => {
+    const createNewProject = async () => {
         const newProject = new Project();
         updateLocalProject(newProject);
         const newUuids = [...uuids, newProject.uuid];
         updateLocalProjectsUUIDS(newUuids);
         setUuids(newUuids);
+
+        await fetch("/camera-closeup.jpeg")
+            .then(res => res.blob())
+            .then(blob => {
+                addThumbnail(newProject.uuid, blob);
+            })
+            .catch(reason => {
+                console.log("failed to fetch thumbnail:", reason);
+            })
     };
 
     const style = 
@@ -71,6 +84,76 @@ function NewProjectButton(): ReactNode {
     );
 }
 
+interface ProjectThumbnailProps {
+    name: string;
+    uuid: string;
+}
+
+function ProjectThumbnail(props: ProjectThumbnailProps): ReactNode {
+    const thumbnailQuery = useLiveQuery(
+        async () => thumbnailsDB.thumbnails
+                        .where('uuid')
+                        .equals(props.uuid)
+                        .toArray()
+    );
+
+    if (!thumbnailQuery) {
+        return (
+            <div className="flex flex-col justify-center items-center">
+                <BubblyContainer noInteraction>
+                    <div className="animate-spin">
+                        <FontAwesomeIcon icon={faSpinner} className="fa-fw"/>
+                    </div>
+                </BubblyContainer>
+            </div>
+        );
+    }
+
+    if (thumbnailQuery.length == 0) {
+        return (
+            <div className="flex justify-center items-center h-full">
+                <Image src={ClipFusionLogoSVG} alt="ClipFusion logo" 
+                    width="100" 
+                    height="100"
+                    className="m-2"/>
+            </div>
+        );
+    }
+
+    const thumbnailUrl = URL.createObjectURL(thumbnailQuery[0].data);
+
+    return (
+        <img src={thumbnailUrl} alt={props.uuid} className="rounded-xl hover:brightness-90 duration-100 object-contain"/>
+    );
+}
+
+interface ProjectInfoProps {
+    uuid: string;
+};
+
+function LinearShadow(): ReactNode {
+    return (
+        <div className="bg-gradient-to-t from-black/60 to-transparent w-full h-20"/>
+    );
+}
+
+function ProjectInfo(props: ProjectInfoProps): ReactNode {
+    const project = getProjectByUUID(props.uuid);
+    if (!project) return <></>;
+
+    return (
+        <div className="absolute bottom-0 left-0 w-full">
+            <div className="absolute bottom-0 left-0 w-full">
+                <LinearShadow/>
+            </div>
+            <div className="absolute bottom-0 left-0 w-full p-3 text-gray-50">
+                <p className="font-bold">{project.name}</p>
+                <p>Last edit date: { project.lastEditDate ? new Date(project.lastEditDate).toLocaleString() : "unknown" }</p>
+            </div>
+        </div>
+    )
+}
+
 interface ProjectButtonProps {
     uuid: string;
 }
@@ -80,18 +163,12 @@ function ProjectButton(props: ProjectButtonProps): ReactNode {
     if (project == null) return <></>;
 
     const style = 
-        `${projectButtonStyle} flex flex-col`;
+        `${projectButtonStyle} flex flex-col grow-0 relative`;
 
     return (
         <div className={style}>
-            <div className="flex items-center justify-center basis-4/6">
-                <BubblyContainer noInteraction>
-                    <FontAwesomeIcon icon={faFolder}/>
-                </BubblyContainer>
-            </div>
-            <div className="flex flex-col basis-2/6 p-2 rounded-b-xl bg-neutral-200 dark:bg-neutral-800">
-                <p className="font-bold">{project.name}</p>
-            </div>
+            <ProjectThumbnail name={project.name} uuid={project.uuid}/>
+            <ProjectInfo uuid={project.uuid}/>
         </div>
     );
 }
@@ -104,7 +181,7 @@ function ProjectsPage(): ReactNode {
             <h1 className="text-left text-2xl md:text-3xl font-bold">Welcome to ClipFusion!</h1>
             <SolidSeparator className="my-4"/>
             <p className="text-xl font-bold">Recent projects</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 my-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 my-2 gap-5">
                 <NewProjectButton/>
                 {
                     uuids.map((uuid: string): ReactNode => {
@@ -156,8 +233,8 @@ export default function Page() {
 
     return (
         <div>
-            <div className="sticky flex flex-row p-2 md:p-5 lg:p-8 gap-5 mt-16">
-                <div className="flex basis-1/6 flex-col gap-2">
+            <main className="sticky flex flex-row p-2 md:p-5 lg:p-8 gap-5 mt-16">
+                <div className="flex basis-1/6 flex-col gap-2 relative top-0 left-0">
                     <SideTabItem number="0" currentPage={currentPage} setCurrentPage={setCurrentPage}>
                         <FontAwesomeIcon icon={ faHome } className="mx-1 fa-fw fill-transparent"/> Home
                     </SideTabItem>
@@ -170,8 +247,8 @@ export default function Page() {
                         {GetContentByPageNumber(currentPage)}
                     </UUIDSContextProvider>
                 </div>
-            </div>
-            <nav className="bg-neutral-200 dark:bg-neutral-600 fixed top-0 left-0 right-0 px-1 h-16 flex flex-row items-center justify-between max-w-full">
+            </main>
+            <nav className="bg-neutral-200 dark:bg-neutral-600 fixed top-0 left-0 right-0 overscroll-none px-1 h-16 flex flex-row items-center justify-between w-screen">
                 <div className="flex flex-row">
                     <BackButton/>
                     <ClipFusionLogo width="25" height="25">
