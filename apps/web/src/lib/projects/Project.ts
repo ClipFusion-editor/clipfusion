@@ -9,7 +9,6 @@ export default class Project {
     constructor(init?: Partial<Project>) {
         this.name = "New ClipFusion Project";
         this.uuid = getUUID();
-        this.creationDate = this.lastEditDate = Date.now();
         Object.assign(this, init);
     }
 

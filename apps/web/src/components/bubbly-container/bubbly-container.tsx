@@ -17,7 +17,7 @@ export default function BubblyContainer(passedProps: BubblyContainerProps): Reac
 
     const normalStyle = "bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-500 dark:hover:bg-neutral-400";
     const forceDarkStyle = "bg-neutral-800 hover:bg-neutral-900";
-    const squareStyle = "grid items-center aspect-square w-auto";
+    const squareStyle = "flex items-center justify-center aspect-square w-auto h-auto";
     const interactionStyle = "duration-75 hover:scale-105 active:scale-125";
 
     return (

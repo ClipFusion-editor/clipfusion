@@ -15,6 +15,10 @@ import { addThumbnail, thumbnailsDB } from '@/lib/thumbnails/thumbnails';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Image from 'next/image';
 import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
+import { toast } from 'react-toastify';
+import { useTheme } from 'next-themes';
+import { sendToast } from '../toasts';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface UUIDSContextProps {
     uuids: Array<string>;
@@ -56,7 +60,9 @@ function NewProjectButton(): ReactNode {
 
     const createNewProject = async () => {
         const newProject = new Project();
+        newProject.creationDate = newProject.lastEditDate = Date.now();
         updateLocalProject(newProject);
+
         const newUuids = [...uuids, newProject.uuid];
         updateLocalProjectsUUIDS(newUuids);
         setUuids(newUuids);
@@ -99,11 +105,9 @@ function ProjectThumbnail(props: ProjectThumbnailProps): ReactNode {
 
     if (!thumbnailQuery) {
         return (
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center h-full">
                 <BubblyContainer noInteraction>
-                    <div className="animate-spin">
-                        <FontAwesomeIcon icon={faSpinner} className="fa-fw"/>
-                    </div>
+                    <FontAwesomeIcon icon={faSpinner} className="fa-fw aspect-square"/>
                 </BubblyContainer>
             </div>
         );
@@ -166,10 +170,10 @@ function ProjectButton(props: ProjectButtonProps): ReactNode {
         `${projectButtonStyle} flex flex-col grow-0 relative`;
 
     return (
-        <div className={style}>
+        <a className={style} href={`/editor?uuid=${ project.uuid }`}>
             <ProjectThumbnail name={project.name} uuid={project.uuid}/>
             <ProjectInfo uuid={project.uuid}/>
-        </div>
+        </a>
     );
 }
 
@@ -224,13 +228,18 @@ function SideTabItem(props: SideTabItemProps): ReactNode {
     );
 }
 
-export default function Page() {
+export default function Home(): ReactNode {
     const [currentPage, setCurrentPage] = useState(0);
+    const searchParams = useSearchParams();
+    const router = useRouter();
 
     useEffect(() => {
         document.title = "ClipFusion - Home";
-    });
-
+        if (searchParams.get('error') == 'no-uuid') {
+            sendToast('Please select the project you want to edit\n(No UUID was provided to the editor)');
+            router.replace('home');
+        }
+    }, []);
     return (
         <div>
             <main className="sticky flex flex-row p-2 md:p-5 lg:p-8 gap-5 mt-16">

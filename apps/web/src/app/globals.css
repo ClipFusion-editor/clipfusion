@@ -39,4 +39,13 @@ body {
       transform: translateY(0px);
     }
   }
+
+  --animate-slide-out: slide-out 0.35s ease-in-out;
+
+  @keyframes slide-out {
+    100% {
+      opacity: 0%;
+      transform: translateY(-15px);
+    }
+  }
 }

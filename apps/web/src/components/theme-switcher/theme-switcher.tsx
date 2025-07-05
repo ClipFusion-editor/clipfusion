@@ -34,7 +34,7 @@ export default function ThemeSwitcher(props: ThemeSwitcherProps): ReactNode {
     return (
         <button type="button" onClick={switchTheme} className="cursor-pointer">
             <BubblyContainer forceDark={props.forceDark}>
-                <FontAwesomeIcon icon={ (theme == 'dark') ? faMoon : faSun } className="fa-fw aspect-square" width={props.width} height={props.height}/>
+                <FontAwesomeIcon icon={ (theme == 'dark') ? faMoon : faSun } className="fa-fw" width={props.width} height={props.height}/>
             </BubblyContainer>
         </button>
     );

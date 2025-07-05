@@ -1,6 +1,7 @@
 'use client';
 import { ThemeProvider } from "next-themes";
 import {  ReactNode, useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 interface ProvidersProps {
     children: ReactNode;
@@ -13,11 +14,12 @@ export default function Providers(props: ProvidersProps): ReactNode {
         setMounted(true);
     }, []);
 
+    if (!mounted) return <></>;
+
     return (
-        (mounted) 
-        ? <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ToastContainer/>
             {props.children}
         </ThemeProvider>
-        : <></>
     );
 };
