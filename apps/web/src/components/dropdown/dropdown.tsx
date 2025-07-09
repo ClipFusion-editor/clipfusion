@@ -16,12 +16,27 @@ export default function Dropdown(props: DropdownProps): ReactNode {
     const [dropdownRendered, setDropdownRendered] = useState(false);
     const { dropdown, setDropdown, position, setPosition, dropdownRef, setPreviousDropdown, shouldCloseDropdowns, setShouldCloseDropdowns } = useDropdownContext();
     const parentRef = useRef(null);
+    const padding = 25;
 
     const calculateDropdownPosition = () => {
         const parentRect = (parentRef.current as any).getBoundingClientRect();
-        const parentX = parentRect.left + window.scrollX;
-        const parentY = parentRect.top + window.scrollY;
+        let parentX = parentRect.left;
+        let parentY = parentRect.top;
         const parentH = parentRect.top - parentRect.bottom;
+
+        if (dropdownRef.current && visible) {
+            const { width, height } = (dropdownRef.current as any).getBoundingClientRect();
+            const viewportWidth = window.outerWidth;
+            const viewportHeight = window.outerHeight;
+
+            if (parentX + width + padding > viewportWidth) {
+                parentX = viewportWidth - width - padding;
+            }
+
+            if (parentY + height + padding > viewportHeight) {
+                parentY = parentY - height - padding * 2;
+            }
+        }
 
         setPosition({
             x: parentX,
@@ -77,16 +92,18 @@ export default function Dropdown(props: DropdownProps): ReactNode {
     }, [dropdownRef, visible]);
 
     useEffect(() => {
-        function handleResize(event: any) {
+        function handleReposition(event: any) {
             if (parentRef.current && visible) {
                 calculateDropdownPosition();
             }
         }
 
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleReposition);
+        window.addEventListener('scroll', handleReposition);
 
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', handleReposition);
+            window.removeEventListener('scroll', handleReposition);
         };
     }, [parentRef, visible]);
 
@@ -99,25 +116,13 @@ export default function Dropdown(props: DropdownProps): ReactNode {
                     </div>
                 </div>
             );
-            setDropdownRendered(true);
-        } else {
-            setDropdownRendered(false);
         }
+        setDropdownRendered(visible);
     }, [position]);
 
     useEffect(() => {
         if (visible && dropdownRef.current) {
-            const { top, left, width } = (dropdownRef.current as any).getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const padding = 25;
-
-            // Adjust position if it goes off-screen
-            let newLeft = left;
-            if (left + width + padding > viewportWidth) {
-                newLeft = viewportWidth - width - padding; // Align to the right edge
-            }
-
-            setPosition({ y: top, x: newLeft });
+            calculateDropdownPosition();
         }
     }, [dropdownRendered]);
 
