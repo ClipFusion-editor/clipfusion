@@ -6,7 +6,7 @@ import ClipFusionLogoSVG from '@/../public/clipfusion-logo.svg';
 import BackButton from '@/components/back-button/back-button';
 import SolidSeparator from '@/components/solid-separator/solid-separator';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
-import { faHome, faPerson, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faClone, faEllipsisH, faHome, faPerson, faPlus, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwitcher from '@/components/theme-switcher/theme-switcher';
 import BubblyContainer from '@/components/bubbly-container/bubbly-container';
 import { getLocalProjectsUUIDS, getProjectByUUID, updateLocalProject, updateLocalProjectsUUIDS } from '@/lib/projects/projects';
@@ -15,10 +15,12 @@ import { addThumbnail, thumbnailsDB } from '@/lib/thumbnails/thumbnails';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Image from 'next/image';
 import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
-import { toast } from 'react-toastify';
-import { useTheme } from 'next-themes';
 import { sendToast } from '../toasts';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Dropdown from '@/components/dropdown/dropdown';
+import RoundedButton from '@/components/rounded-button/rounded-button';
+import MenuItem from '@/components/menu-item/menu-item';
+import { useDropdownContext } from '@/components/dropdown-provider/dropdown-provider';
 
 interface UUIDSContextProps {
     uuids: Array<string>;
@@ -53,7 +55,7 @@ function useUuidsContext(): UUIDSContextProps {
 }
 
 const projectButtonStyle = 
-    "cursor-pointer rounded-xl dark:bg-neutral-900 bg-neutral-200 w-full aspect-video active:scale-95 hover:scale-[98%] duration-75 overflow-hidden";
+    "cursor-pointer rounded-xl dark:bg-neutral-900 bg-neutral-200 w-full aspect-video active:scale-95 duration-75";
 
 function NewProjectButton(): ReactNode {
     const { uuids, setUuids } = useUuidsContext();
@@ -137,7 +139,7 @@ interface ProjectInfoProps {
 
 function LinearShadow(): ReactNode {
     return (
-        <div className="bg-gradient-to-t from-black/60 to-transparent w-full h-20"/>
+        <div className="bg-gradient-to-t from-black/60 to-transparent w-full h-20 rounded-xl"/>
     );
 }
 
@@ -145,14 +147,59 @@ function ProjectInfo(props: ProjectInfoProps): ReactNode {
     const project = getProjectByUUID(props.uuid);
     if (!project) return <></>;
 
+    const { setShouldCloseDropdowns } = useDropdownContext();
+
+    const onInfoClick = () => {
+        console.log("info clicked");
+        setShouldCloseDropdowns(true);
+    };
+
+    const onDuplicateClick = () => {
+        console.log("duplicate clicked");
+        setShouldCloseDropdowns(true);
+    };
+
+    const onDeleteClick = () => {
+        console.log("delete clicked");
+        setShouldCloseDropdowns(true);
+    };
+
     return (
         <div className="absolute bottom-0 left-0 w-full">
             <div className="absolute bottom-0 left-0 w-full">
                 <LinearShadow/>
             </div>
             <div className="absolute bottom-0 left-0 w-full p-3 text-gray-50">
-                <p className="font-bold">{project.name}</p>
-                <p>Last edit date: { project.lastEditDate ? new Date(project.lastEditDate).toLocaleString() : "unknown" }</p>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <p className="font-bold">{project.name}</p>
+                        <p>Last edit date: { project.lastEditDate ? new Date(project.lastEditDate).toLocaleString() : "unknown" }</p>
+                    </div>
+                    <div>
+                        <Dropdown trigger={
+                            <div className="p-2 hover:text-neutral-200 active:text-foreground">
+                                <FontAwesomeIcon icon={faEllipsisH} className="fa-fw"/>
+                            </div>
+                        } className="w-40">
+                            <button type="button" onClick={onInfoClick}>
+                                <MenuItem>
+                                    <FontAwesomeIcon icon={faCircleInfo} className="fa-fw m-1"/> Info
+                                </MenuItem>
+                            </button>
+                            <button type="button" onClick={onDuplicateClick}>
+                                <MenuItem>
+                                    <FontAwesomeIcon icon={faClone} className="fa-fw m-1"/> Duplicate
+                                </MenuItem>
+                            </button>
+                            <SolidSeparator/>
+                            <button type="button" onClick={onDeleteClick}>
+                                <MenuItem className="text-red-600">
+                                    <FontAwesomeIcon icon={faTrashCan} className="fa-fw m-1"/> Delete
+                                </MenuItem>
+                            </button>
+                        </Dropdown>
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -170,10 +217,12 @@ function ProjectButton(props: ProjectButtonProps): ReactNode {
         `${projectButtonStyle} flex flex-col grow-0 relative`;
 
     return (
-        <a className={style} href={`/editor?uuid=${ project.uuid }`}>
-            <ProjectThumbnail name={project.name} uuid={project.uuid}/>
+        <div className={style}>
+            <a href={`/editor?uuid=${ project.uuid }`} className="h-full overflow-hidden rounded-xl">
+                <ProjectThumbnail name={project.name} uuid={project.uuid}/>
+            </a>
             <ProjectInfo uuid={project.uuid}/>
-        </a>
+        </div>
     );
 }
 
@@ -240,6 +289,7 @@ export default function Home(): ReactNode {
             router.replace('home');
         }
     }, []);
+
     return (
         <div>
             <main className="sticky flex flex-row p-2 md:p-5 lg:p-8 gap-5 mt-16">

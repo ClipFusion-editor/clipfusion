@@ -48,4 +48,32 @@ body {
       transform: translateY(-15px);
     }
   }
+
+  --animate-scale-in: scale-in 0.2s ease-in-out;
+
+  @keyframes scale-in {
+    0% {
+      opacity: 0%;
+      transform: scale(95%);
+    }
+
+    100% {
+      opacity: 100%;
+      transform: scale(100%);
+    }
+  }
+
+  --animate-scale-out: scale-out 0.2s ease-in-out forwards;
+
+  @keyframes scale-out {
+    0% {
+      opacity: 100%;
+      transform: scale(100%);
+    }
+    
+    100% {
+      opacity: 0%;
+      transform: scale(90%);
+    }
+  }
 }
