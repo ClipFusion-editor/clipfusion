@@ -1,4 +1,4 @@
-import Project from "./Project";
+import Project from "../../types/Project";
 
 
 export function getProjectByUUID(uuid: string): Project | null {

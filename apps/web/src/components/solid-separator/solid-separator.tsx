@@ -2,10 +2,17 @@ import { ReactNode } from "react";
 
 interface SolidSeparatorProps {
     className?: string;
+    height?: string | number;
 }
 
-export default function SolidSeparator(props: SolidSeparatorProps): ReactNode {
+const defaultProps: SolidSeparatorProps = {
+    className: "border-neutral-600 dark:border-neutral-800",
+    height: 4
+};
+
+export default function SolidSeparator(passedProps: SolidSeparatorProps): ReactNode {
+    const props = {...defaultProps, ...passedProps};
     return (
-        <hr className={`border-t-4 border-solid border-neutral-600 dark:border-neutral-800 ${ props.className }`}/>
+        <hr className={`border-t-${props.height} border-solid ${ props.className }`}/>
     );
 }

@@ -15,6 +15,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-red: rgb(255, 0, 0);
 }
 
 body {
@@ -49,7 +50,7 @@ body {
     }
   }
 
-  --animate-scale-in: scale-in 0.2s ease-in-out;
+  --animate-scale-in: scale-in 0.1s ease-in-out;
 
   @keyframes scale-in {
     0% {
@@ -63,7 +64,7 @@ body {
     }
   }
 
-  --animate-scale-out: scale-out 0.2s ease-in-out forwards;
+  --animate-scale-out: scale-out 0.1s ease-in-out forwards;
 
   @keyframes scale-out {
     0% {
@@ -76,4 +77,29 @@ body {
       transform: scale(90%);
     }
   }
+}
+
+@utility custom-backdrop-blur-xs {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@utility custom-backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@utility custom-backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@utility custom-backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@utility custom-backdrop-blur-xl {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }

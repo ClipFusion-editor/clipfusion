@@ -1,4 +1,4 @@
-import ThumbnailsDB from "./ThumbnailsDB";
+import ThumbnailsDB from "../../types/ThumbnailsDB";
 
 export const thumbnailsDB = new ThumbnailsDB();
 

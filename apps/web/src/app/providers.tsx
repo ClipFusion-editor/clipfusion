@@ -1,5 +1,4 @@
 'use client';
-import { DropdownProvider } from "@/components/dropdown-provider/dropdown-provider";
 import { ThemeProvider } from "next-themes";
 import {  ReactNode, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -20,9 +19,7 @@ export default function Providers(props: ProvidersProps): ReactNode {
     return (
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ToastContainer/>
-            <DropdownProvider>
-                {props.children}
-            </DropdownProvider>
+            {props.children}
         </ThemeProvider>
     );
 };

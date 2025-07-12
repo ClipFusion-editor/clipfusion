@@ -6,21 +6,20 @@ import ClipFusionLogoSVG from '@/../public/clipfusion-logo.svg';
 import BackButton from '@/components/back-button/back-button';
 import SolidSeparator from '@/components/solid-separator/solid-separator';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
-import { faCircleInfo, faClone, faEllipsisH, faHome, faPerson, faPlus, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faClone, faEllipsisH, faHome, faPerson, faPlus, faSmile, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwitcher from '@/components/theme-switcher/theme-switcher';
 import BubblyContainer from '@/components/bubbly-container/bubbly-container';
 import { getLocalProjectsUUIDS, getProjectByUUID, updateLocalProject, updateLocalProjectsUUIDS } from '@/lib/projects/projects';
-import Project from '@/lib/projects/Project';
+import Project from '@/types/Project';
 import { addThumbnail, thumbnailsDB } from '@/lib/thumbnails/thumbnails';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Image from 'next/image';
 import ClipFusionLogo from '@/components/clipfusion-logo/clipfusion-logo';
 import { sendToast } from '../toasts';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Dropdown from '@/components/dropdown/dropdown';
-import RoundedButton from '@/components/rounded-button/rounded-button';
-import MenuItem from '@/components/menu-item/menu-item';
-import { useDropdownContext } from '@/components/dropdown-provider/dropdown-provider';
+import Dropdown from '@/components/dropdown';
+import MenuItem from '@/components/menu-item';
+import SubMenu from '@/components/sub-menu';
 
 interface UUIDSContextProps {
     uuids: Array<string>;
@@ -144,24 +143,23 @@ function LinearShadow(): ReactNode {
 }
 
 function ProjectInfo(props: ProjectInfoProps): ReactNode {
+    const [dropdownVisible, setDropdownVisible] = useState(false);
     const project = getProjectByUUID(props.uuid);
     if (!project) return <></>;
 
-    const { setShouldCloseDropdowns } = useDropdownContext();
-
     const onInfoClick = () => {
         console.log("info clicked");
-        setShouldCloseDropdowns(true);
+        setDropdownVisible(false);
     };
 
     const onDuplicateClick = () => {
         console.log("duplicate clicked");
-        setShouldCloseDropdowns(true);
+        setDropdownVisible(false);
     };
 
     const onDeleteClick = () => {
         console.log("delete clicked");
-        setShouldCloseDropdowns(true);
+        setDropdownVisible(false);
     };
 
     return (
@@ -180,7 +178,9 @@ function ProjectInfo(props: ProjectInfoProps): ReactNode {
                             <div className="p-2 hover:text-neutral-200 active:text-foreground">
                                 <FontAwesomeIcon icon={faEllipsisH} className="fa-fw"/>
                             </div>
-                        } className="w-40">
+                        } visible={dropdownVisible} setVisible={setDropdownVisible} className="min-w-60">
+                            <p className="font-bold m-2">{project.name}</p>
+                            <SolidSeparator/>
                             <button type="button" onClick={onInfoClick}>
                                 <MenuItem>
                                     <FontAwesomeIcon icon={faCircleInfo} className="fa-fw m-1"/> Info
@@ -191,9 +191,8 @@ function ProjectInfo(props: ProjectInfoProps): ReactNode {
                                     <FontAwesomeIcon icon={faClone} className="fa-fw m-1"/> Duplicate
                                 </MenuItem>
                             </button>
-                            <SolidSeparator/>
                             <button type="button" onClick={onDeleteClick}>
-                                <MenuItem className="text-red-600">
+                                <MenuItem className="text-red-600 dark:text-red">
                                     <FontAwesomeIcon icon={faTrashCan} className="fa-fw m-1"/> Delete
                                 </MenuItem>
                             </button>
